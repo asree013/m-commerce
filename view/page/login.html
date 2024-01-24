@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LilKaoX Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        body{
+            margin: 60px 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media only screen and (max-width: 450px) {
+            body{
+                margin: 20px 20px;
+            } 
+        }
+    </style>
+</head>
+<body >
+    <div class="card">
+        <div class="card-content">
+            <h1>Login</h1>
+            <div class="field m-3">
+                <label class="label">Username</label>
+                <div class="control">
+                    <input class="input" id="username" type="text" placeholder="Text input" value="test001">
+                    <p class="help is-success">This username is available</p>
+                </div>
+            </div>      
+            <div class="field m-3">
+                <label class="label">Password</label>
+                <div class="control">
+                    <input class="input" id="password" type="password" placeholder="Text input" value="bulma">
+                    <p class="help is-success">This username is available</p>
+                </div>
+            </div> 
+            <div class="buttons">
+                <button class="button is-success" type="button" onclick="onLogin()">Login</button>  
+                <button class="button is-danger">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/login.js"></script>
+</body>
+</html>
