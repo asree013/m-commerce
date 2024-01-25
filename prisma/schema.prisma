@@ -24,4 +24,49 @@ model Users {
   role String @default("users")
   create_data DateTime @default(now())
   update_date DateTime @updatedAt
+  product Products[]
+}
+
+model Products {
+  id String @id @default(uuid())
+  name String @unique
+  price Int 
+  detail String?
+  stock Int
+  image String?
+  create_date DateTime @default(now())
+  update_date DateTime @updatedAt
+  category_id String
+  category Category @relation(fields: [category_id], references: [id])
+  user_id String
+  users Users @relation(fields: [user_id], references: [id])
+  product_id Order_item[]
+}
+
+model Category {
+  id String @id @default(uuid())
+  name String @unique
+  detail String?
+  product Products[]
+  create_date DateTime @default(now())
+  update_date DateTime @updatedAt
+}
+
+model Orders {
+  id String @default(uuid()) @id
+  status String @default("draft")
+  count Int
+  product_item Order_item[]
+  create_date DateTime @default(now())
+  update_date DateTime @updatedAt
+}
+
+model Order_item {
+  id String @id @default(uuid())
+  create_date DateTime @default(now())
+  update_date DateTime @updatedAt
+  product_id String
+  product Products @relation(fields: [product_id], references: [id])
+  order_id String
+  order Orders @relation(fields: [order_id], references: [id])
 }

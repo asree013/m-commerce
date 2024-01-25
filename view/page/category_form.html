@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lil KaoX Create Category</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="icon" type="image/x-icon" href="../image/logo.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js" integrity="sha512-TjBzDQIDnc6pWyeM1bhMnDxtWH0QpOXMcVooglXrali/Tj7W569/wd4E8EDjk1CwOAOPSJon1VfcEt1BI4xIrA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <nav class="navbar is-transparent">
+
+    </nav>
+
+    <div style="padding: 30px;">
+        <form action="" id="form">
+            <div class="card" style="padding: 20px; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+                <header class="card-header">
+                    <h1 class="card-header-title">Create Category</h1>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+        
+                        <div class="field">
+                            <label class="label">Username</label>
+                            <div class="control">
+                                <input id="name" class="input" type="text" placeholder="Name Category" required>
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+        
+                        <div class="field">
+                            <label class="label">Message</label>
+                            <div class="control">
+                                <textarea id="detail" class="textarea" placeholder="Textarea"></textarea>
+                            </div>
+                        </div>
+        
+                    </div>
+                </div>
+                <footer class="card-footer">
+                    <button class="button is-link card-footer-item" type="submit">Create</button>
+                    <button class="button is-link is-light card-footer-item">Cancel</button>
+                </footer>
+            </div>
+        </form>
+    </div>
+    <script src="../js/gobla.js"></script>
+    <script>
+        const form = document.getElementById('form')
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            const name = document.getElementById('name').value
+            const detail = document.getElementById('detail').value
+            try {
+                const data = {
+                    name: name,
+                    detail: detail
+                }
+                const result = await axios.post('http://localhost:3000/api/category', data)
+                if(result){
+                    history.back()
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        })
+        if (window.location.pathname.split("/")[2] === '00000000-0000-0000-0000-000000000000') {
+
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+body{
+    padding: 10px;
+}
+.product_item{
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 10px;
+}
+.panel{
+    width: 20%;
+    height: 100%;
+}
+.card_item_list{
+    width: 78%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+}
+.cardProduct {
+    width: 15.5rem;
+}

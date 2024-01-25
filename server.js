@@ -5,14 +5,22 @@ const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
 const path = require('path');
+var cookieSession = require('cookie-session')
 
-
+app.use(cookieSession({
+  name: 'session',
+  keys: [process.env.JWT_TOKEN],
+  maxAge: 24 * 60 * 60 * 1000
+}))
 app.use(express.static(path.join(__dirname, 'view/page')));
 app.use('/js', express.static(path.join(__dirname, 'view/js')));
+app.use('/js', express.static(path.join(__dirname, 'view/js')));
+app.use('/image', express.static(path.join(__dirname, 'view/image')));
 app.use('/css', express.static(path.join(__dirname, 'view/css')));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
 app.use(require('./routes'))
+app.use('/api/' ,require('./controller'))
 
 
 io.on('connection', (socket) => {
