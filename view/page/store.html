@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lil LaoX MyStore</title>
+
+    <style>
+        .body_store{
+            margin: 20px 15%;
+        }
+        @media only screen and (max-width: 450px) {
+            .body_store{
+            margin: 15px;
+        } 
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar is-transparent"></div>
+
+    <div class="body_store">
+        <nav class="panel is-link">
+            <p class="panel-heading">
+              MyStore
+            </p>
+            <div class="panel-block">
+              <p class="control has-icons-left" >
+                <input class="input" type="text" placeholder="Search">
+                <span class="icon is-left">
+                  <i class="fas fa-search" aria-hidden="true"></i>
+                </span>
+                <a style="width: 100%; margin: 10px 0;" class="button is-success" href="/store/00000000-0000-0000-0000-000000000000">Create Store</a>
+              </p>
+            </div>
+            <p class="panel-tabs">
+              <a class="is-active">All</a>
+              <a>Public</a>
+              <a>Private</a>
+              <a>Sources</a>
+              <a>Forks</a>
+            </p>
+          </nav>
+        <div id="card_store">
+
+        </div>
+    </div>
+
+    <script src="../js/validate_login.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js" integrity="sha512-TjBzDQIDnc6pWyeM1bhMnDxtWH0QpOXMcVooglXrali/Tj7W569/wd4E8EDjk1CwOAOPSJon1VfcEt1BI4xIrA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/gobla.js"></script>
+    <script>
+        async function feedStore () {
+            try {
+                const result = await axios.get('http://localhost:3000/api/store')
+                console.log(result.data);
+                if(result.data) {
+                    let html = ''
+                    for (let i = 0; i < result.data.length; i++) {
+                        const element = result.data[i];
+                        html += `
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img width="140px" src="${element.image_store || element.image_store === null? '../image/noimage.png': 'http://localhost:3000/images/'+ element.image_store  }" alt="Placeholder image">
+                                    </div>
+                                    <div class="media-content">
+                                        <p class="title is-4">${element.name}</p>
+                                        <p class="subtitle is-6">@${element.user.username}</p>
+                                    </div>
+                                </div>
+
+                                <div class="content">
+                                    ${element.detail}
+                                    Phasellus nec iaculis mauris. <a>@bulmaio</a>.
+                                    <a href="#">#css</a> <a href="#">#responsive</a>
+                                    <br>
+                                    <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+                                    <p>สร้างเมื่อ: ${element.create_data.split("T")[0]} แก้ไขเมื่อ: ${element.update_date.split("T")[0]}</p>
+                                </div>
+
+                                <div class="media-content">
+                                        <button class="button is-primary">edit</button>
+                                        <button class="button is-danger">delete</button>
+                                    </div>
+                            </div>
+                        </div>
+                        `
+                    }
+                    document.getElementById('card_store').innerHTML = html
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        feedStore()
+    </script>
+</body>
+
+</html>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LilKaoX Register</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js" integrity="sha512-TjBzDQIDnc6pWyeM1bhMnDxtWH0QpOXMcVooglXrali/Tj7W569/wd4E8EDjk1CwOAOPSJon1VfcEt1BI4xIrA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         body{
             margin: 60px 200px;
@@ -19,31 +20,84 @@
         }
     </style>
 </head>
-<body >
-    <div class="card">
-        <div class="card-content">
-            <h1>Register</h1>
-            <div class="field m-3">
-                <label class="label">Username</label>
-                <div class="control">
-                    <input class="input" id="username" type="text" placeholder="Text input" value="test001">
-                    <p class="help is-success">This username is available</p>
+<body style="flex-direction: column;">
+    <nav class="navbar is-transparent">
+        
+    </nav>
+
+    <div id="alert" style="margin: 10px;">
+
+    </div>
+    
+    <form id="form">
+        <div class="card">
+            <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                <img src="../image/logo.png" width="170px" alt="">
+                <h1 style="font-size: 2rem; font-weight: 700;">Lil KaoX Register</h1>
+            </div>
+            <div class="card-content">
+                <div class="field m-3">
+                    <label class="label">Username</label>
+                    <div class="control">
+                        <input class="input" id="username" type="text" placeholder="User input">
+                        <p id="pUsername" class="help is-success"></p>
+                    </div>
+                </div>      
+                <div class="field m-3">
+                    <label class="label">Password</label>
+                    <div class="control">
+                        <input class="input" id="password" type="text" placeholder="Password input" >
+                        <p id="pPassword" class="help is-success"></p>
+                    </div>
+                </div> 
+                <div class="field m-3">
+                    <label class="label">Firstname</label>
+                    <div class="control">
+                        <input class="input" id="firstname" type="text" placeholder="Firstname input" >
+                        <p id="pPassword" class="help is-success"></p>
+                    </div>
+                </div> 
+                <div class="field m-3">
+                    <label class="label">Lastname</label>
+                    <div class="control">
+                        <input class="input" id="lastname" type="text" placeholder="Lastname input" >
+                        <p id="pPassword" class="help is-success"></p>
+                    </div>
+                </div> 
+                <div class="buttons">
+                    <button class="button is-success" type="submit">Regiser</button>  
+                    <button class="button is-danger" onclick="history.back()">cancel</button>
                 </div>
-            </div>      
-            <div class="field m-3">
-                <label class="label">Password</label>
-                <div class="control">
-                    <input class="input" id="password" type="password" placeholder="Text input" value="bulma">
-                    <p class="help is-success">This username is available</p>
-                </div>
-            </div> 
-            <div class="buttons">
-                <button class="button is-success" type="button" onclick="onLogin()">Login</button>  
-                <button class="button is-danger">Register</button>
             </div>
         </div>
-    </div>
+    </form>
 
-    <script src="../js/login.js"></script>
+    <script src="../js/gobla.js"></script>
+    <script>
+        const form = document.getElementById('form')
+
+        form.addEventListener('submit', async(e) =>{
+            e.preventDefault()
+            let username = document.getElementById('username').value
+            let password = document.getElementById('password').value
+            let firstname = document.getElementById('firstname').value
+            let lastname = document.getElementById('lastname').value
+            const data = {
+                username: username,
+                password: password,
+                firstname: firstname,
+                lastname: lastname
+            }
+            try {
+               const result = await axios.post('http://localhost:3000/api/register', data)
+               console.log(result.data);
+               window.location.href = '/login'
+            } catch (error) {
+               console.log(error); 
+            }
+        })
+
+    </script>
+
 </body>
 </html>

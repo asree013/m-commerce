@@ -19,7 +19,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
     res.status(200).json({fileName: fileName})
   } catch (error) {
     res.status(500).json(error)
-    
   }
   
 });

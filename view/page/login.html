@@ -20,31 +20,39 @@
         }
     </style>
 </head>
-<body >
+<body style="flex-direction: column;">
+    <div id="alert" style="margin: 10px;">
+
+    </div>
+    
     <div class="card">
+        <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <img src="../image/logo.png" width="170px" alt="">
+            <h1 style="font-size: 2.3rem; font-weight: 700;">Lil KaoX Login</h1>
+        </div>
         <div class="card-content">
-            <h1>Login</h1>
             <div class="field m-3">
                 <label class="label">Username</label>
                 <div class="control">
                     <input class="input" id="username" type="text" placeholder="Text input" value="test001">
-                    <p class="help is-success">This username is available</p>
+                    <p id="pUsername" class="help is-success"></p>
                 </div>
             </div>      
             <div class="field m-3">
                 <label class="label">Password</label>
                 <div class="control">
                     <input class="input" id="password" type="password" placeholder="Text input" value="bulma">
-                    <p class="help is-success">This username is available</p>
+                    <p id="pPassword" class="help is-success"></p>
                 </div>
             </div> 
             <div class="buttons">
                 <button class="button is-success" type="button" onclick="onLogin()">Login</button>  
-                <button class="button is-danger">Register</button>
+                <button class="button is-danger" onclick="window.location.href = '/register'">Register</button>
             </div>
         </div>
     </div>
 
     <script src="../js/login.js"></script>
+
 </body>
 </html>

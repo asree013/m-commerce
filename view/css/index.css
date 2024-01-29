@@ -1,14 +1,18 @@
 body{
     padding: 10px;
 }
+.product_all {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 10px;
+    margin-top: 10px;
+}
 .product_item{
     display: flex;
     align-items: start;
     justify-content: space-between;
     width: 100%;
+    margin: 10px;
     height: 100%;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    padding: 10px;
 }
 .panel{
     width: 20%;

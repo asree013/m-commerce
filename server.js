@@ -6,6 +6,7 @@ const { Server } = require('socket.io');
 const io = new Server(server);
 const path = require('path');
 var cookieSession = require('cookie-session')
+const cors = require('cors')
 
 app.use(cookieSession({
   name: 'session',
@@ -21,6 +22,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true}))
 app.use(require('./routes'))
 app.use('/api/' ,require('./controller'))
+app.use('/images', express.static(path.join(__dirname, 'uploads')));
+app.use(cors())
 
 
 io.on('connection', (socket) => {

@@ -96,8 +96,10 @@
     <input id="input" autocomplete="off" /><button>Send</button>
   </form>
 
+  <script src="../js/validate_login.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    
     var socket = io();
     let name = document.getElementById('nameChat')
     var form = document.getElementById('form');

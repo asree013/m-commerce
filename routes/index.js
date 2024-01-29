@@ -24,11 +24,19 @@ route.get('/register', (req, res) => {
     res.sendFile(headPath + 'register.html')
 })
 route.get(`/category/:id`, (req, res) => {
-    // const id = req.params.id
-    // if(id === uuid.NIL) {
-    //     return res.sendFile(headPath + '.html')
-    // }
     res.sendFile(headPath + 'category_form.html')
+})
+route.get('/product/:id', (req, res) => {
+    res.sendFile(headPath + 'product_form.html')
+})
+route.get('/store', (req, res) => {
+    res.sendFile(headPath + 'store.html')
+})
+route.get('/store/:id', (req, res) => {
+    res.sendFile(headPath + 'store_form.html')
+})
+route.get('/product', (req, res) => {
+    res.sendFile(headPath+ 'product.html')
 })
 
 module.exports = route

@@ -26,11 +26,11 @@ app.post('/login', async(req, res) => {
             }
         })
         if(!findUser) {
-            return res.status(401).json({message: 'is not user'})
+            return res.status(401).json('is not user')
         }
         const hashPassword = await bcrypt.compare(password, findUser.password)
         if(!hashPassword) {
-            return res.status(401).json({message: 'password not match'})
+            return res.status(402).json({message: 'password not match'})
         }
         const accessToken = generateAccessToken(findUser);
         const refreshToken = generateRefreshToken();
@@ -69,10 +69,15 @@ app.post('/token', async (req, res) => {
         const token = req.header('Authorization')
         const decode = await jwt.verify(token.split(' ')[1], keyJwt);
         if(decode){
+            const user = await db.users.findFirst({
+                where: {
+                    id: decode.id
+                }
+            })
             const userId = decode.user_id
             const iat = decode.iat
             const exp = decode.exp
-            res.status(200).json({user_id: userId, username: decode.username, iat: iat, exp: exp})
+            res.status(200).json({user_id: userId, image: user.image, firstname: user.firstname, lastname: user.lastname, iat: iat, exp: exp})
         }
     } catch (error) {
         res.status(500).json(error)

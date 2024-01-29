@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "./src/prisma/client"
+  output   = "./src/prisma/client"
 }
 
 datasource db {
@@ -12,61 +12,80 @@ datasource db {
 }
 
 model Users {
-  id String @id @default(uuid())
-  username String @unique
-  password String 
-  firstname String
-  lastname String
-  address String?
-  idCard String?
-  tel String?
-  image String?
-  role String @default("users")
+  id          String   @id @default(uuid())
+  username    String   @unique
+  password    String
+  firstname   String
+  lastname    String
+  address     String?
+  idCard      String?
+  tel         String?
+  image       String?
+  role        String   @default("users")
   create_data DateTime @default(now())
   update_date DateTime @updatedAt
-  product Products[]
+  store       Stores[]
+}
+
+model Stores {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  detail      String?
+  address     String
+  province    String
+  district    String
+  aumpher     String
+  zip_code    String
+  image_store String?
+  create_data DateTime @default(now())
+  update_date DateTime @updatedAt
+  user_id     String
+  user        Users    @relation(fields: [user_id], references: [id])
+  product     Products[]
 }
 
 model Products {
-  id String @id @default(uuid())
-  name String @unique
-  price Int 
-  detail String?
-  stock Int
-  image String?
-  create_date DateTime @default(now())
-  update_date DateTime @updatedAt
+  id          String       @id @default(uuid())
+  name        String       @unique
+  sku         String
+  barcode     String       @unique
+  price       Int
+  detail      String?
+  stock       Int
+  image       String?
+  create_date DateTime     @default(now())
+  update_date DateTime     @updatedAt
   category_id String
-  category Category @relation(fields: [category_id], references: [id])
-  user_id String
-  users Users @relation(fields: [user_id], references: [id])
-  product_id Order_item[]
+  category    Category     @relation(fields: [category_id], references: [id])
+  store_id    String
+  store       Stores       @relation(fields: [store_id], references: [id])
+  orers  Order_item[]
 }
 
 model Category {
-  id String @id @default(uuid())
-  name String @unique
-  detail String?
-  product Products[]
-  create_date DateTime @default(now())
-  update_date DateTime @updatedAt
+  id          String     @id @default(uuid())
+  name        String     @unique
+  detail      String?
+  product     Products[]
+  create_date DateTime   @default(now())
+  update_date DateTime   @updatedAt
 }
 
 model Orders {
-  id String @default(uuid()) @id
-  status String @default("draft")
-  count Int
+  id           String       @id @default(uuid())
+  status       String       @default("draft")
+  count        Int
   product_item Order_item[]
-  create_date DateTime @default(now())
-  update_date DateTime @updatedAt
+  create_date  DateTime     @default(now())
+  update_date  DateTime     @updatedAt
 }
 
 model Order_item {
-  id String @id @default(uuid())
+  id          String   @id @default(uuid())
   create_date DateTime @default(now())
   update_date DateTime @updatedAt
-  product_id String
-  product Products @relation(fields: [product_id], references: [id])
-  order_id String
-  order Orders @relation(fields: [order_id], references: [id])
+  product_id  String
+  product     Products @relation(fields: [product_id], references: [id])
+  order_id    String
+  order       Orders   @relation(fields: [order_id], references: [id])
 }

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lil KaoX Create Product</title>
+</head>
+
+<body>
+    <nav class="navbar is-transparent">
+
+    </nav>
+
+    <div style="padding: 30px;">
+        <form id="form">
+            <div class="card" style="padding: 20px; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+                <header class="card-header has-background-primary">
+                    <h1 class="card-header-title has-text-white-ter">Create Product</h1>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+        
+                        <div class="field">
+                            <label class="label">Product Name</label>
+                            <div class="control">
+                                <input id="name" class="input" type="text" placeholder="Name Store" >
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+        
+                        <div class="field">
+                            <label class="label">Detail</label>
+                            <div class="control">
+                                <textarea id="detail" class="textarea" placeholder="Detail" ></textarea>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">SKU</label>
+                            <div class="control">
+                                <input id="sku" class="input" type="text" placeholder="SKU" >
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Barcode</label>
+                            <div class="control">
+                                <input id="barcode" class="input" type="text" placeholder="Barcode" >
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Price</label>
+                            <div class="control">
+                                <input id="price" class="input" type="number" placeholder="Price" >
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Stock</label>
+                            <div class="control">
+                                <input id="stock" class="input" type="number" placeholder="Stock" >
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div id="select" class="field">
+                            
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Image Store</label>
+                            <div class="file">
+                                <label class="file-label">
+                                  <input class="file-input" onchange="onUpload()" id="image_store" type="file">
+                                  <span class="file-cta">
+                                    <span class="file-label">
+                                      Choose a file…
+                                    </span>
+                                  </span>
+                                </label>
+                              </div>
+                        </div>
+
+                        <div id="preview">
+
+                        </div>
+        
+                    </div>
+                </div>
+                <footer class="card-footer mt-3">
+                    <button class="button is-link card-footer-item" type="submit">Create</button>
+                    <button class="button is-link is-light card-footer-item">Cancel</button>
+                </footer>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js" integrity="sha512-TjBzDQIDnc6pWyeM1bhMnDxtWH0QpOXMcVooglXrali/Tj7W569/wd4E8EDjk1CwOAOPSJon1VfcEt1BI4xIrA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="../js/gobla.js"></script>
+    <script>
+        var image = document.getElementById('image_store')
+
+        async function feedCategory() {
+            try {
+                const result = await axios.get('http://localhost:3000/api/category')
+                let html = ''
+                for (let i = 0; i < result.data.length; i++) {
+                    const element = result.data[i];
+                    html += `
+                        <div class="select">
+                                <select id="category">
+                                  <option selected disabled>Select Category</option>
+                                  <option value="${element.id}">${element.name}</option>
+                                </select>
+                        </div>
+                    `
+                }
+                document.getElementById('select').innerHTML = html
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        feedCategory()
+        function onUpload() {
+            const preview = document.getElementById('preview')
+            preview.innerHTML = ''
+            if(image.files || image.files[0]) {
+                const file = URL.createObjectURL(image.files[0])
+                preview.innerHTML = `
+                    <figure class="image is-128x128">
+                        <img id="image_preview" src="${file}">
+                    </figure>
+                
+                `
+            }
+        }
+        
+        if (window.location.pathname.split("/")[2] === '00000000-0000-0000-0000-000000000000') {
+            console.log('create');
+            const form = document.getElementById('form')
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault()
+                const name = document.getElementById('name').value
+                const detail = document.getElementById('detail').value
+                const price = document.getElementById('price').value
+                const stock = document.getElementById('stock').value
+                const sku = document.getElementById('sku').value
+                const barcode = document.getElementById('barcode').value
+                const category = document.getElementById('category').value
+
+                try {
+                    const store = localStorage.getItem('store')
+                    if(!store) return alert('กรุณาเลืกร้านค้าก่อน')
+                    const formData = new FormData()
+                    formData.append('file', image.files[0])
+                    const header = {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                    const uploadImage = await axios.post('http://localhost:3000/api/upload', formData, header)
+                    const data = {
+                        name: name,
+                        detail: detail,
+                        price: Number(price),
+                        stock: Number(stock),
+                        sku: sku,
+                        barcode: barcode,
+                        image: uploadImage? uploadImage.data.fileName: '',
+                        category_id: category,
+                        store_id: JSON.parse(store).store_id.toString()
+                    }
+                    console.log(data);
+                    const result = await axios.post('http://localhost:3000/api/product', data)
+                    if(result){
+                        console.log(result.data);
+                        // history.back()
+                    }
+                        
+                        
+                } catch (error) {
+                    console.log(error);
+                }
+            })
+        }
+        else{
+            alert('edit')
+        }
+    </script>
+</body>
+
+</html>

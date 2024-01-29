@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lil KaoX Create Store</title>
+</head>
+
+<body>
+    <nav class="navbar is-transparent">
+
+    </nav>
+
+    <div style="padding: 30px;">
+        <form id="form">
+            <div class="card" style="padding: 20px; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+                <header class="card-header">
+                    <h1 class="card-header-title">Create Store</h1>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+
+                        <div class="field">
+                            <label class="label">Store Name</label>
+                            <div class="control">
+                                <input id="name" class="input" type="text" placeholder="Name Store" required>
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Detail</label>
+                            <div class="control">
+                                <textarea id="detail" class="textarea" placeholder="Detail" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Address</label>
+                            <div class="control">
+                                <input id="address" class="input" type="text" placeholder="Name Address" required>
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Province</label>
+                            <div class="control">
+                                <input id="province" class="input" type="text" placeholder="Name Province" required>
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">District</label>
+                            <div class="control">
+                                <input id="district" class="input" type="text" placeholder="District Store" required>
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Aumpher</label>
+                            <div class="control">
+                                <input id="aumpher" class="input" type="text" placeholder="Aumpher Store" required>
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Zip Code</label>
+                            <div class="control">
+                                <input id="aumpher" class="input" type="text" placeholder="Zip Code Store" required>
+                            </div>
+                            <p class="help is-success">This username is available</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Image Store</label>
+                            <div class="file">
+                                <label class="file-label">
+                                    <input class="file-input" onchange="onUpload()" id="image_store" type="file">
+                                    <span class="file-cta">
+                                        <span class="file-label">
+                                            Choose a file…
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="preview">
+
+                        </div>
+
+                    </div>
+                </div>
+                <footer class="card-footer mt-3">
+                    <button class="button is-link card-footer-item" type="submit">Create</button>
+                    <button class="button is-link is-light card-footer-item">Cancel</button>
+                </footer>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"
+        integrity="sha512-TjBzDQIDnc6pWyeM1bhMnDxtWH0QpOXMcVooglXrali/Tj7W569/wd4E8EDjk1CwOAOPSJon1VfcEt1BI4xIrA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="../js/gobla.js"></script>
+    <script>
+        const jwt = JSON.parse(localStorage.getItem('jwt')).accessToken
+        var userID = ""
+
+        async function accessTokens(bearer) {
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", `Bearer ${bearer}`);
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                redirect: 'follow'
+            };
+            try {
+                const result = await fetch("http://localhost:3000/api/token", requestOptions)
+                result.json().then(r => userID = r.user_id)
+            } catch (error) {
+                console.log('error', error)
+            }
+        }
+
+        var image = document.getElementById('image_store')
+
+        function onUpload() {
+            const preview = document.getElementById('preview')
+            preview.innerHTML = ''
+            if (image.files || image.files[0]) {
+                const file = URL.createObjectURL(image.files[0])
+                preview.innerHTML = `
+                    <figure class="image is-128x128">
+                        <img id="image_preview" src="${file}">
+                    </figure>
+                
+                `
+            }
+        }
+
+        if (window.location.pathname.split("/")[2] === '00000000-0000-0000-0000-000000000000') {
+            const form = document.getElementById('form')
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault()
+                const name = document.getElementById('name').value
+                const detail = document.getElementById('detail').value
+                const address = document.getElementById('address').value
+                const province = document.getElementById('province').value
+                const aumpher = document.getElementById('aumpher').value
+                const district = document.getElementById('district').value
+                const zip_code = document.getElementById('district').value
+
+                try {
+                    accessTokens(jwt)
+                    const header = {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                    const formData = new FormData()
+                    formData.append('file', image.files[0])
+                    const uploadImage = await axios.post('http://localhost:3000/api/upload', formData, header)
+                    const data = {
+                        name: name,
+                        detail: detail,
+                        address: address,
+                        province: province,
+                        aumpher: aumpher,
+                        district: district,
+                        zip_code: zip_code,
+                        image: uploadImage? uploadImage.data.fileName: '',
+                        user_id: userID
+                    }
+                    const result = await axios.post('http://localhost:3000/api/store', data)
+                    if (result) {
+                        console.log(result.data);
+                        history.back()
+                    }
+
+                } catch (error) {
+                    console.log(error);
+                }
+            })
+        }
+        else {
+            alert('edit')
+        }
+    </script>
+</body>
+
+</html>

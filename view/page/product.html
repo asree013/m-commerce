@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lil LaoX MyProduct</title>
+
+    <style>
+        .body_store {
+            margin: 20px 10%;
+            padding: 5px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        }
+
+
+        @media only screen and (max-width: 450px) {
+            .body_store {
+                margin: 15px;
+                padding: 5px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar is-transparent"></div>
+
+    <div class="body_store">
+        <nav class="panel is-link">
+            <p class="panel-heading">
+                MyStore
+            </p>
+            <div class="panel-block">
+                <p class="control has-icons-left">
+                    <input class="input" type="text" placeholder="Search">
+                    <span class="icon is-left">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                    </span>
+                    <a style="width: 100%; margin: 10px 0;" class="button is-success"
+                        href="/product/00000000-0000-0000-0000-000000000000">Create Product</a>
+                </p>
+            </div>
+            <p class="panel-tabs">
+                <a class="is-active">All</a>
+                <a>Public</a>
+                <a>Private</a>
+                <a>Sources</a>
+                <a>Forks</a>
+            </p>
+        </nav>
+        <div class="table-container" id="table">
+            
+        </div>
+    </div>
+
+    <script src="../js/validate_login.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"
+        integrity="sha512-TjBzDQIDnc6pWyeM1bhMnDxtWH0QpOXMcVooglXrali/Tj7W569/wd4E8EDjk1CwOAOPSJon1VfcEt1BI4xIrA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="../js/gobla.js"></script>
+    <script>
+        const jwt = JSON.parse(localStorage.getItem('jwt')).accessToken
+        
+        
+        async function feedMyProduct() {
+            try {
+                let userID = ""
+                const myHeaders = new Headers();
+                myHeaders.append("Authorization", `Bearer ${jwt}`);
+
+                var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    redirect: 'follow'
+                };
+                const user = await fetch("http://localhost:3000/api/token", requestOptions)
+                user.json().then(async(r) => {
+                    console.log(r.user_id);
+                    const result = await axios.get(`http://localhost:3000/api/user/${r.user_id}/product`)
+                    if(result.data) {
+                        let html = ''
+                        for (let i = 0; i < result.data.length; i++) {
+                            const element = result.data[i];
+                            html += `
+                                <table class="table is-fullwidth is-hoverable is-responsive">
+                                    <thead>
+                                        <tr class="is-selected">
+                                            <th><abbr title="Position">Pos</abbr></th>
+                                            <th>image</th>
+                                            <th><abbr title="Played">sku</abbr></th>
+                                            <th><abbr title="Played">barcode</abbr></th>
+                                            <th><abbr title="Won">name</abbr></th>
+                                            <th><abbr title="Won">detail</abbr></th>
+                                            <th><abbr title="Drawn">stock</abbr></th>
+                                            <th><abbr title="Lost">price</abbr></th>
+                                            <th><abbr title="Goals for">create</abbr></th>
+                                            <th><abbr title="Goals against">update</abbr></th>
+                                            <th>action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>1</th>
+                                            <td>
+                                                <figure class="image is-128x128">
+                                                    <img src="${element.image? 'http://localhost:3000/images/' +element.image: '../image/noimage.png'}">
+                                                </figure>
+                                            </td>
+                                            <td>${element.sku}</td>
+                                            <td>${element.barcode}</td>
+                                            <td>${element.name}</td>
+                                            <td>${element.detail}</td>
+                                            <td>${element.price}</td>
+                                            <td>${element.stock}</td>
+                                            <td>${element.create_date.split("T")[0]}</td>
+                                            <td>${element.update_date.split("T")[0]}</td>
+                                            <td style="display: flex; flex-direction: column;">
+                                                <button class="button is-link m-2">edit</button>
+                                                <button class="button is-danger m-2">delete</button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+                                <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                                    <a class="pagination-previous">Previous</a>
+                                    <a class="pagination-next">Next page</a>
+                                    <ul class="pagination-list">
+                                        <li><a class="pagination-link is-current" aria-label="Goto page 1">1</a></li>
+                                        <li><a class="pagination-link " aria-label="Goto page 45">2</a></li>
+                                        <li><a class="pagination-link" aria-label="Page 46" aria-current="page">3</a></li>
+                                        <li><a class="pagination-link" aria-label="Goto page 86">4</a></li>
+                                    </ul>
+                                </nav>
+                            `
+                        }
+                        document.getElementById('table').innerHTML = html
+                    }   
+                })
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        feedMyProduct()
+    </script>
+</body>
+
+</html>
